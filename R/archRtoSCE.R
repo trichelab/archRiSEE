@@ -6,6 +6,7 @@
 #' @param tile          tile size (500)
 #' @param addNMF        add an NMF decomposition of logCounts? (FALSE)
 #' @param k             rank for the NMF decomposition on logCounts (30) 
+#' @param colDat        add LSI and/or NMF scores to colData(SCE)? (FALSE)
 #' @param ...           additional arguments to pass to ArchR::addTileMatrix
 #'
 #' @return              a SingleCellExperiment 
@@ -20,7 +21,7 @@
 #'
 #' @export
 #'
-archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, ...) { 
+archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, colDat=FALSE, ...) { 
 
   message("Adding TileMatrix to ArchR project (this may take a while)...")
   proj <- addTileMatrix(proj, force=TRUE, binarize=FALSE, tileSize=tile, ...)
@@ -42,8 +43,10 @@ archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, ...) {
   reducedDim(SCE, "LSI") <- proj@reducedDims$IterativeLSI$matSVD
   LSIdims <- ncol(proj@reducedDims$IterativeLSI$matSVD)
   names(reducedDim(SCE, "LSI")) <- paste0("LSI", seq_len(LSIdims))
-  message("Copying LSI dimensions to colData(SCE) for iSEE visualization...")
-  for (i in names(reducedDim(SCE, "LSI"))) colData(SCE)[, i] <- i
+  if (colDat) { 
+    message("Copying LSI dimensions to colData(SCE) for iSEE visualization...")
+    for (i in names(reducedDim(SCE, "LSI"))) colData(SCE)[, i] <- i
+  }
 
   if (addNMF) {
     message("Fitting rank-", k, " NMF model to logCounts(SCE)...")
@@ -52,8 +55,10 @@ archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, ...) {
     reducedDim(SCE, "NMF") <- t(metadata(SCE)$NMF@h)
     NMFdims <- ncol(reducedDim(SCE, "NMF"))
     names(reducedDim(SCE, "NMF")) <- paste0("NMF", seq_len(NMFdims))
-    message("Copying NMF dimensions to colData(SCE) for iSEE visualization...")
-    for (i in names(reducedDim(SCE, "NMF"))) colData(SCE)[, i] <- i
+    if (colDat) { 
+      message("Copying NMF dimensions to colData() for iSEE visualization...")
+      for (i in names(reducedDim(SCE, "NMF"))) colData(SCE)[, i] <- i
+    }
   }
      
   message("Done.")

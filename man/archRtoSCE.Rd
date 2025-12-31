@@ -4,7 +4,7 @@
 \alias{archRtoSCE}
 \title{turn an ArchR project into a SingleCellExperiment}
 \usage{
-archRtoSCE(proj, tile = 500, addNMF = FALSE, k = 30, ...)
+archRtoSCE(proj, tile = 500, addNMF = FALSE, k = 30, colDat = FALSE, ...)
 }
 \arguments{
 \item{proj}{an ArchRproject}
@@ -14,6 +14,8 @@ archRtoSCE(proj, tile = 500, addNMF = FALSE, k = 30, ...)
 \item{addNMF}{add an NMF decomposition of logCounts? (FALSE)}
 
 \item{k}{rank for the NMF decomposition on logCounts (30)}
+
+\item{colDat}{add LSI and/or NMF scores to colData(SCE)? (FALSE)}
 
 \item{...}{additional arguments to pass to ArchR::addTileMatrix}
 }
