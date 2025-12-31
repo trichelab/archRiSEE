@@ -1,0 +1,34 @@
+Package: archRiSEE
+Type: Package
+Title: convert ArchR projects into SingleCellExperiments, and add some niceties
+Description: ArchR is a glorious package for single-cell chromatin analysis, but
+             its interactive tools for exploratory analyses leave something to 
+             be desired. iSEE, by contrast, is fantastic for exploration and 
+             spitballing. When combined with igvR (igv.js running on a socket),
+             plotting genomic abundance, factor loadings, chromatin states, etc.
+             becomes quite intuitive. archRiSEE bolts together the components 
+             along with some NMF-related niceties for rapid iteration of 
+             collaborative explorations, as when spitballing figures or for QC.
+Version: 0.1.0
+Date: 2025-12-31
+Authors@R: person("Tim", "Triche, Jr.", role=c("aut", "cre"), email="trichelab@gmail.com")
+Author: Tim Triche, Jr. [aut, cre]
+Maintainer: Tim Triche, Jr. <trichelab@gmail.com>
+URL: https://github.com/trichelab/archRiSEE
+BugReports: https://github.com/trichelab/archRiSEE/issues
+License: MIT + file LICENSE
+Depends:
+    R (>= 3.0.0),
+    ArchR,
+    iSEE
+Imports:
+    SingleCellExperiment,
+    RcppML,
+    igvR
+Suggests:
+    LEA,
+    covr,
+    testthat
+RoxygenNote: 7.3.3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
