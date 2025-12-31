@@ -16,12 +16,17 @@ iSEEarchR <- function(x, colorColumn = "Clusters") {
   # reason for this will become obvious 
   stopifnot(c("UMAP","LSI") %in% reducedDimNames(x))
 
-  # if LSI columns aren't in colData already, add them 
-  # could do the same for NMF if it is in reducedDimNames(x)... 
-  LSIdim <- ncol(reducedDim(ewsSub, "LSI"))
-  if (sum(grepl("LSI", names(colData(ewsSub)), ignore.case=TRUE)) < LSIdim) { 
-    for (i in seq_len(LSIdim)) { 
-      colData(x)[, paste0("LSI", i)] <- reducedDim(x, "LSI")[, i]
+  # if LSI and/or NMF columns aren't in colData already, add them 
+  if (!all(names(reducedDim(x, "LSI")) %in% names(colData(x)))) {
+    for (i in names(reducedDim(SCE, "LSI"))) {
+      message("Adding ", i, " as colData(SCE)$", i)
+      colData(x)[, i] <- i
+    }
+  }
+  if ("NMF" %in% reducedDimNames(x)) {
+    for (i in names(reducedDim(SCE, "NMF"))) {
+      message("Adding ", i, " as colData(SCE)$", i)
+      colData(x)[, i] <- i
     }
   }
 
