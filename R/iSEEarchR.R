@@ -39,7 +39,7 @@ iSEEarchR <- function(x, colorColumn = "Clusters") {
                        VisualBoxOpen = TRUE,
                        ColorBy = "Column data",
                        ColorByColumnData = colorColumn,
-                       Type = "NMF_UMAP"
+                       Type = "UMAP"
                        ),
             FACTORS = new("ColumnDataPlot",
                        YAxis = "TSSEnrichment",
