@@ -7,7 +7,7 @@
 addIgvTrack(x, trk, igv, co = "violet", a = TRUE, ...)
 }
 \arguments{
-\item{x}{SingleCellExperiment with weights in mcols(rowRanges)[\link{trk}]}
+\item{x}{SingleCellExperiment with weights in mcols(rowRanges)$trk}
 
 \item{trk}{name of the column in mcols(rowRanges(x)) with weights to plot}
 
@@ -24,4 +24,16 @@ none, called for side effects
 }
 \description{
 wrapper to add a weights track to an igvR instance
+}
+\examples{
+library(igvR)
+igv <- igvR()
+mcols(SCE)$aTrack <- rpois(nrow(SCE), lambda=50)
+addIgvTrack(SCE, "aTrack", igv) 
+
+}
+\seealso{
+igvR::GRangesQuantitativeTrack
+
+igvR::displayTrack
 }

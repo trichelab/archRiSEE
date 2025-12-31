@@ -14,12 +14,13 @@
 #'
 #' @import ArchR
 #' @import scater
+#' @import RcppML
 #' @import GenomicRanges
 #' @import SingleCellExperiment
 #'
 #' @export
 #'
-archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30) { 
+archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, ...) { 
 
   message("Adding TileMatrix to ArchR project (this may take a while)...")
   proj <- addTileMatrix(proj, force=TRUE, binarize=FALSE, tileSize=tile, ...)
@@ -37,13 +38,25 @@ archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30) {
   names(reducedDim(SCE, "UMAP")) <- c("UMAP1", "UMAP2")
 
   # NMF should just be a clone of this 
+  message("Copying LSI scores to reducedDim(SCE, 'LSI')...")
   reducedDim(SCE, "LSI") <- proj@reducedDims$IterativeLSI$matSVD
-  LSIdims <- proj@reducedDims$IterativeLSI$matSVD
+  LSIdims <- ncol(proj@reducedDims$IterativeLSI$matSVD)
   names(reducedDim(SCE, "LSI")) <- paste0("LSI", seq_len(LSIdims))
+  message("Copying LSI dimensions to colData(SCE) for iSEE visualization...")
   for (i in names(reducedDim(SCE, "LSI"))) colData(SCE)[, i] <- i
 
-  if (addNMF) warning("NMF support hasn't been bolted on yet, yell at Tim")
-
+  if (addNMF) {
+    message("Fitting rank-", k, " NMF model to logCounts(SCE)...")
+    metadata(SCE)$NMF <- RcppML::nmf(logcounts(SCE), k=k)
+    message("Copying NMF hat matrix to reducedDim(SCE, 'NMF')...")
+    reducedDim(SCE, "NMF") <- t(metadata(SCE)$NMF@h)
+    NMFdims <- ncol(reducedDim(SCE, "NMF"))
+    names(reducedDim(SCE, "NMF")) <- paste0("NMF", seq_len(NMFdims))
+    message("Copying NMF dimensions to colData(SCE) for iSEE visualization...")
+    for (i in names(reducedDim(SCE, "NMF"))) colData(SCE)[, i] <- i
+  }
+     
+  message("Done.")
   return(SCE)
 
 }

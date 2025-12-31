@@ -4,7 +4,7 @@
 \alias{archRtoSCE}
 \title{turn an ArchR project into a SingleCellExperiment}
 \usage{
-archRtoSCE(proj, tile = 500, addNMF = FALSE, k = 30)
+archRtoSCE(proj, tile = 500, addNMF = FALSE, k = 30, ...)
 }
 \arguments{
 \item{proj}{an ArchRproject}

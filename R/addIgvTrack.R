@@ -1,6 +1,6 @@
 #' wrapper to add a weights track to an igvR instance 
 #' 
-#' @param   x   SingleCellExperiment with weights in mcols(rowRanges)[[trk]]
+#' @param   x   SingleCellExperiment with weights in mcols(rowRanges)$trk
 #' @param   trk name of the column in mcols(rowRanges(x)) with weights to plot
 #' @param   igv igvR object with the appropriate genome to match x 
 #' @param   co  color for the track (violet)
@@ -9,6 +9,15 @@
 #' 
 #' @return  none, called for side effects 
 #' 
+#' @examples
+#' library(igvR)
+#' igv <- igvR()
+#' mcols(SCE)$aTrack <- rpois(nrow(SCE), lambda=50)
+#' addIgvTrack(SCE, "aTrack", igv) 
+#'
+#' @seealso igvR::GRangesQuantitativeTrack
+#' @seealso igvR::displayTrack
+#'
 #' @import  igvR
 #' 
 addIgvTrack <- function(x, trk, igv, co="violet", a=TRUE, ...) {
