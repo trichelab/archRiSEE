@@ -41,11 +41,14 @@ archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, colDat=FALSE, ...) {
   # NMF should just be a clone of this 
   message("Copying LSI scores to reducedDim(SCE, 'LSI')...")
   reducedDim(SCE, "LSI") <- proj@reducedDims$IterativeLSI$matSVD
-  LSIdims <- ncol(proj@reducedDims$IterativeLSI$matSVD)
+  LSIdims <- ncol(reducedDim(SCE, "LSI"))
   names(reducedDim(SCE, "LSI")) <- paste0("LSI", seq_len(LSIdims))
   if (colDat) { 
     message("Copying LSI dimensions to colData(SCE) for iSEE visualization...")
-    for (i in names(reducedDim(SCE, "LSI"))) colData(SCE)[, i] <- i
+    for (i in names(reducedDim(SCE, "LSI"))) {
+      message("Adding ", i, " as colData(SCE)$", i)
+      colData(SCE)[, i] <- i
+    }
   }
 
   if (addNMF) {
@@ -57,7 +60,10 @@ archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, colDat=FALSE, ...) {
     names(reducedDim(SCE, "NMF")) <- paste0("NMF", seq_len(NMFdims))
     if (colDat) { 
       message("Copying NMF dimensions to colData() for iSEE visualization...")
-      for (i in names(reducedDim(SCE, "NMF"))) colData(SCE)[, i] <- i
+      for (i in names(reducedDim(SCE, "NMF"))) {
+        message("Adding ", i, " as colData(SCE)$", i)
+        colData(SCE)[, i] <- i
+      }
     }
   }
      
