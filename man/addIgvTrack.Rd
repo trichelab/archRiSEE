@@ -11,7 +11,7 @@ addIgvTrack(x, trk, igv, co = "violet", a = TRUE, ...)
 
 \item{trk}{name of the column in mcols(x) with weights to plot}
 
-\item{igv}{an igvR object (genome will be set to match unique(genome(x)))}
+\item{igv}{an igvR object with an appropriate genome to match genome(x)}
 
 \item{co}{color for the track (violet)}
 
@@ -20,7 +20,7 @@ addIgvTrack(x, trk, igv, co = "violet", a = TRUE, ...)
 \item{...}{additional parameters passed to igvR::GRangesQuantitativeTrack}
 }
 \value{
-none, called for side effects
+nothing useful (called for side effects)
 }
 \description{
 wrapper to add a weights track to an igvR instance
@@ -28,6 +28,7 @@ wrapper to add a weights track to an igvR instance
 \examples{
 library(igvR)
 igv <- igvR()
+setGenome(igv, "hg38")
 mcols(SCE)$aTrack <- rpois(nrow(SCE), lambda=50)
 addIgvTrack(SCE, "aTrack", igv) 
 
@@ -36,6 +37,8 @@ addIgvTrack(SCE, "aTrack", igv)
 igvR::GRangesQuantitativeTrack
 
 igvR::displayTrack
+
+igvR::setGenome
 
 igvR::igvR
 }
