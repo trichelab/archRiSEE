@@ -21,6 +21,8 @@
 #'
 #' @import  igvR
 #' 
+#' @export
+#'
 addIgvTrack <- function(x, trk, igv, co="violet", a=TRUE, ...) {
 
   stopifnot(is(igv, "igvR"))
