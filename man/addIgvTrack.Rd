@@ -7,17 +7,17 @@
 addIgvTrack(x, trk, igv, co = "violet", a = TRUE, ...)
 }
 \arguments{
-\item{x}{SingleCellExperiment with weights in mcols(rowRanges)$trk}
+\item{x}{SingleCellExperiment with weights in mcols(x)$trk}
 
-\item{trk}{name of the column in mcols(rowRanges(x)) with weights to plot}
+\item{trk}{name of the column in mcols(x) with weights to plot}
 
-\item{igv}{igvR object with the appropriate genome to match x}
+\item{igv}{an igvR object (genome will be set to match unique(genome(x)))}
 
 \item{co}{color for the track (violet)}
 
 \item{a}{autoscale the track? (TRUE)}
 
-\item{...}{additional parameters passed to igvR::displayTrack}
+\item{...}{additional parameters passed to igvR::GRangesQuantitativeTrack}
 }
 \value{
 none, called for side effects
@@ -36,4 +36,6 @@ addIgvTrack(SCE, "aTrack", igv)
 igvR::GRangesQuantitativeTrack
 
 igvR::displayTrack
+
+igvR::igvR
 }

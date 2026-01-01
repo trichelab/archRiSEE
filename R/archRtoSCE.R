@@ -14,8 +14,8 @@
 #' @details presumes LSI and UMAP. you will almost certainly want to tweak this.
 #'
 #' @import ArchR
-#' @import scater
 #' @import RcppML
+#' @import scuttle
 #' @import GenomicRanges
 #' @import SingleCellExperiment
 #'
@@ -38,35 +38,20 @@ archRtoSCE <- function(proj, tile=500, addNMF=FALSE, k=30, colDat=FALSE, ...) {
   reducedDim(SCE, "UMAP") <- proj@embeddings$UMAP$df
   names(reducedDim(SCE, "UMAP")) <- c("UMAP1", "UMAP2")
 
-  # NMF should just be a clone of this 
   message("Copying LSI scores to reducedDim(SCE, 'LSI')...")
   reducedDim(SCE, "LSI") <- proj@reducedDims$IterativeLSI$matSVD
   LSIdims <- ncol(reducedDim(SCE, "LSI"))
   names(reducedDim(SCE, "LSI")) <- paste0("LSI", seq_len(LSIdims))
   if (colDat) { 
     message("Copying LSI dimensions to colData(SCE) for iSEE visualization...")
-    for (i in names(reducedDim(SCE, "LSI"))) {
+    for (i in colnames(reducedDim(SCE, "LSI"))) {
       message("Adding ", i, " as colData(SCE)$", i)
-      colData(SCE)[, i] <- i
+      colData(SCE)[, i] <- reducedDim(SCE, "LSI")[, i]
     }
   }
 
-  if (addNMF) {
-    message("Fitting rank-", k, " NMF model to logCounts(SCE)...")
-    metadata(SCE)$NMF <- RcppML::nmf(logcounts(SCE), k=k)
-    message("Copying NMF hat matrix to reducedDim(SCE, 'NMF')...")
-    reducedDim(SCE, "NMF") <- t(metadata(SCE)$NMF@h)
-    NMFdims <- ncol(reducedDim(SCE, "NMF"))
-    names(reducedDim(SCE, "NMF")) <- paste0("NMF", seq_len(NMFdims))
-    if (colDat) { 
-      message("Copying NMF dimensions to colData() for iSEE visualization...")
-      for (i in names(reducedDim(SCE, "NMF"))) {
-        message("Adding ", i, " as colData(SCE)$", i)
-        colData(SCE)[, i] <- i
-      }
-    }
-  }
-     
+  if (addNMF) SCE <- addNMF(SCE, k=k, colDat=colDat, rowDat=TRUE)
+
   message("Done.")
   return(SCE)
 
