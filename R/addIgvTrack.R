@@ -30,7 +30,11 @@ addIgvTrack <- function(x, trk, igv, co="violet", a=TRUE, ...) {
   setGenome(igv, unique(genome(rr)))
   mcols(rr) <- mcols(rr)[, trk, drop=FALSE]
   names(mcols(rr)) <- "score"
-  displayTrack(igv, 
-               GRangesQuantitativeTrack(trk, rr, color=co, autoscale=a, ...))
+  invisible(displayTrack(igv, 
+                         GRangesQuantitativeTrack(trk,
+                                                  rr, 
+                                                  color=co, 
+                                                  autoscale=a, 
+                                                  ...)))
 
 }
