@@ -33,7 +33,7 @@ addIgvTrack <- function(x, trk, igv, co="violet", a=TRUE, ...) {
     warning("No genome currently set for x; fix this to avoid major mishaps.")
   } else { 
     stopifnot(g %in% getSupportedGenomes(igv))
-    message("Please be sure to setGenome(igv, ", g, ") before adding tracks.")
+    message('Please be sure to setGenome(igv, "', g, '") before adding tracks.')
   }
   rr <- .makeIgvTrackFromRowRanges(x, trk)  
   displayTrack(igv, 
